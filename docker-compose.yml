@@ -1,0 +1,18 @@
+services:
+  jr-insc:
+    image: elbromasmc/jr-insc
+    volumes:
+      - jr-insc-data:/home/runner/data
+    restart: no
+    ipc: host
+    security_opt:
+      - seccomp:./seccomp_profile.json
+    environment:
+      - DATA_DIR=/home/runner/data
+      - ENV=prod
+      - SEACE_USER=${SEACE_USER}
+      - SEACE_PASS=${SEACE_PASS}
+
+volumes:
+  jr-insc-data:
+
