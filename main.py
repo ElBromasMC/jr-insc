@@ -210,6 +210,11 @@ async def register_vidrios_data(browser, df, name):
     results = []
     for i, descripcion in enumerate(df["Descripción del Objeto"]):
         result = await register_data_vidrios(browser, descripcion, name, i)
+        if result == "Error" and '\n' in descripcion:
+            # Try again
+            lines = descripcion.split('\n')
+            longest = max(lines, key=len)
+            result = await register_data_vidrios(browser, longest, name, i)
         results.append(result)
     df["Estado de registro"] = results
     return df
