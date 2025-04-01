@@ -127,6 +127,7 @@ async def get_data_vidrios(browser, year, start_date, end_date, opts):
 
 async def register_data_vidrios(browser, descripcion, name, i):
     print(f"register_data_vidrios: {i}")
+    print(descripcion)
 
     # Start page instance
     context = await browser.new_context()
@@ -144,6 +145,10 @@ async def register_data_vidrios(browser, descripcion, name, i):
     except Exception as e:
         print(f"register_data_vidrios (Ficha de Selección) error: {e}")
         await page.screenshot(path=f"{IMG_DIR}/{name}/{i}-seleccion.png")
+        try:
+            await page.get_by_role("button", name="Aceptar").click()
+        except Exception as e:
+            pass
         await logout_seace(page)
         await page.close()
         await context.close()
@@ -159,7 +164,20 @@ async def register_data_vidrios(browser, descripcion, name, i):
         await context.close()
         return "No disponible"
 
-    await page.get_by_role("checkbox").click()
+    try:
+        await page.get_by_role("checkbox").click()
+    except Exception as e:
+        print(f"register_data_vidrios (Checkbox) error: {e}")
+        await page.screenshot(path=f"{IMG_DIR}/{name}/{i}-checkbox.png")
+        try:
+            await page.get_by_role("button", name="Aceptar").click()
+        except Exception as e:
+            pass
+        await logout_seace(page)
+        await page.close()
+        await context.close()
+        return "No disponible (Checkbox)"
+
     await page.get_by_role("button", name="Inscribir").click()
     await page.get_by_role("button", name="Aceptar").click()
 
