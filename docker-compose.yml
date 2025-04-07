@@ -4,9 +4,6 @@ services:
     volumes:
       - jr-insc-data:/home/runner/data
     restart: no
-    ipc: host
-    security_opt:
-      - seccomp:./seccomp_profile.json
     environment:
       - DATA_DIR=/home/runner/data
       - ENV=prod

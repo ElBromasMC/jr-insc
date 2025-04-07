@@ -26,12 +26,11 @@ RUN python3 -m venv venv \
 RUN useradd -m runner
 USER runner
 
-# Create and enter src folder
-RUN mkdir /home/runner/src
-WORKDIR /home/runner/src
+# Create required folders
+RUN mkdir /home/runner/src \
+    && mkdir /home/runner/data
 
-# Copy source files
-COPY --chown=runner:runner . .
+WORKDIR /home/runner/src
 
 # Install dependencies
 RUN python3 -m venv venv \
@@ -42,9 +41,10 @@ RUN python3 -m venv venv \
     openpyxl \
     && playwright install --only-shell chromium-headless-shell
 
-# Create data folders
-RUN mkdir /home/runner/data
+# Copy source files
+COPY --chown=runner:runner main.py ./
 
+# Create entrypoint
 COPY --chown=runner:runner ./scripts/docker-run-prod.sh /home/runner/
-COPY --chown=runner:runner ./scripts/docker-authenticate-prod.sh /home/runner/
+ENTRYPOINT ["/home/runner/docker-run-prod.sh"]
 

@@ -1,12 +1,11 @@
 services:
   devrunner:
-    image: devrunner-jr-insc
+    user: "1000:1000"
+    userns_mode: "keep-id:uid=1000,gid=1000"
+    restart: no
     build:
       context: .
       dockerfile: ./Dockerfile.dev
-      args:
-        - USER_UID=${USER_UID}
-    #user: "devrunner:devrunner"
     volumes:
       # Bind source directory
       - type: bind
@@ -23,10 +22,6 @@ services:
         read_only: true
       # Persistent data
       - dev-jr-insc-data:/home/devrunner/data
-    restart: no
-    #ipc: host
-    security_opt:
-      - seccomp:./seccomp_profile.json
     environment:
       # Display environment
       - WAYLAND_DISPLAY=${WAYLAND_DISPLAY}
@@ -39,4 +34,7 @@ services:
 
 volumes:
   dev-jr-insc-data:
+
+x-podman:
+  in_pod: false
 
