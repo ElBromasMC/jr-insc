@@ -1,6 +1,7 @@
 services:
   jr-insc:
     image: elbromasmc/jr-insc
+    network_mode: "pasta"
     volumes:
       - jr-insc-data:/home/runner/data
     restart: no
